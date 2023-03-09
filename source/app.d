@@ -68,7 +68,7 @@ void main()
         Font.setCanvasSize(Window.getWidth, Window.getHeight);
         
         Shader.setUniformMatrix4("2d", "cameraMatrix", Camera.updateGuiMatrix());
-        Shader.setUniformMatrix4("2d", "objectMatrix", Camera.setGuiObjectMatrix(Vector2d(0,0)) );
+        Shader.setUniformMatrix4("2d", "objectMatrix", Camera.setGuiObjectMatrix() );
         
 
         {
