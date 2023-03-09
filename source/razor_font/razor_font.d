@@ -36,6 +36,7 @@ private double[8 * CHARACTER_LIMIT] textureCoordinateCache;
 private int[6 * CHARACTER_LIMIT] indicesCache;
 /// The count of each of these so we can grab a slice of data fresh out of the oven, delicious!
 private int vertexCount            = 0;
+private int colorCount             = 0;
 private int textureCoordinateCount = 0;
 private int indicesCount           = 0;
 
@@ -254,16 +255,47 @@ void createFont(string fileLocation, string name = "", bool trimming = false, do
 //* ============================ BEGIN GRAPHICS DISPATCH ===========================
 
 /**
-Allows you to blanket set the color for the entire string
+Allows you to blanket set the color for the entire canvas.
+
+Be careful though, this overwrites the entire color cache
+after the currently rendered character position in memory!
 */
-void setColor(double r, double b, double g, double a = 1.0) {
-    for (int i = 0; i < colorCache.length; i += 4) {
+void setColorALL(double r, double g, double b, double a = 1.0) {
+    for (int i = colorCount; i < colorCache.length; i += 4) {
         colorCache[i]     = r;
         colorCache[i + 1] = g;
         colorCache[i + 2] = b;
         colorCache[i + 3] = a;
     }
 }
+
+/**
+Allows you to blanket a range of characters in the canvas with
+a range of characters.
+
+So if you have: abcdefg
+And run setColorRange(0.5,0.5,0.5, 1, 3, 5)
+Now e and f are gray. Alpha 1.0
+*/
+void setColorRange(double r, double g, double b, double a, int start, int end) {
+    for (int i = start * 16; i < end * 16; i += 4) {
+        colorCache[i]     = r;
+        colorCache[i + 1] = g;
+        colorCache[i + 2] = b;
+        colorCache[i + 3] = a;
+    }
+}
+
+/// Allows you to simply get the max amount of characters allowed in canvas
+int getMaxChars() {
+    return CHARACTER_LIMIT;
+}
+
+/// Allows you to index the current amount of characters on the canvas
+int getCurrentCharacterIndex() {
+    return vertexCount / 4;
+}
+
 
 /**
 Allows you to extract the current font PNG file location automatically
