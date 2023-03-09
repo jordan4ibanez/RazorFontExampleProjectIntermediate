@@ -286,16 +286,40 @@ void setColorRange(double r, double g, double b, double a, int start, int end) {
     }
 }
 
+/**
+Allows you to set individual character colors
+*/
+void setColorChar(double r, double g, double b, double a, int charIndex) {
+    const int startIndex = charIndex * 16;
+    for (int i = startIndex; i < startIndex + 16; i += 4) {
+        colorCache[i]     = r;
+        colorCache[i + 1] = g;
+        colorCache[i + 2] = b;
+        colorCache[i + 3] = a;
+    }
+}
+
 /// Allows you to simply get the max amount of characters allowed in canvas
 int getMaxChars() {
     return CHARACTER_LIMIT;
 }
 
-/// Allows you to index the current amount of characters on the canvas
+/**
+Allows you to index the current amount of characters on the canvas. This does
+not include spaces and carriage returns.
+*/
 int getCurrentCharacterIndex() {
     return vertexCount / 4;
 }
 
+/**
+Allows you to work DIRECTLY on the color cache. Use this for crazy custom stuff!
+*/
+ref double[4 * 4 * CHARACTER_LIMIT] getColorCacheMutable() {
+    return colorCache;
+}
+
+//! Debug
 
 /**
 Allows you to extract the current font PNG file location automatically
