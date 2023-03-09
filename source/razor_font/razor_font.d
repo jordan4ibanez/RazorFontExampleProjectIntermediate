@@ -48,6 +48,10 @@ private double canvasWidth  = -1;
 private double canvasHeight = -1;
 
 /**
+This allows switching between colors in between rendering to canvas
+*/
+private double[4] currentColor = [1,1,1,1];
+/**
 These store constant data that is highly repetitive
 */
 private immutable double[8] RAW_VERTEX  = [ 0,0, 0,1, 1,1, 1,0 ];
@@ -248,6 +252,18 @@ void createFont(string fileLocation, string name = "", bool trimming = false, do
 }
 
 //* ============================ BEGIN GRAPHICS DISPATCH ===========================
+
+/**
+Allows you to blanket set the color for the entire string
+*/
+void setColor(double r, double b, double g, double a = 1.0) {
+    for (int i = 0; i < colorCache.length; i += 4) {
+        colorCache[i]     = r;
+        colorCache[i + 1] = g;
+        colorCache[i + 2] = b;
+        colorCache[i + 3] = a;
+    }
+}
 
 /**
 Allows you to extract the current font PNG file location automatically
