@@ -28,6 +28,8 @@ Counts are so we can grab a slice of this information because anything after it 
 private immutable int CHARACTER_LIMIT = 4096;
 /// 4 Vertex positions in a char
 private double[4 * CHARACTER_LIMIT] vertexCache;
+// 4 vec4 colors (so 16 per char)
+private double[4 * 4 * CHARACTER_LIMIT] colorCache;
 /// 8 (4 vec2) texture coordinate positions in a char
 private double[8 * CHARACTER_LIMIT] textureCoordinateCache;
 /// 6 (2 tris) indices in a char
