@@ -173,7 +173,7 @@ void main()
                     // We want this to be a smooth flowing animation loop
                     // So we're gonna use some fancy math
                     const double left = theBeach + cast(double)i;
-                    const double right = left + 2.5; // This is what I'm talking about below.
+                    const double right = left + 1.0; // This is what I'm talking about below.
 
                     double waterFlowLeft  = (Math.sin(left)  / 2.0) + 0.5;
                     double waterFlowRight = (Math.sin(right) / 2.0) + 0.5;
@@ -184,8 +184,8 @@ void main()
                     form on a 2d plotter. We're starting from the left point
                     of that (data + index) to get somewhere on that data stream.
                     That's the left side done, so the easiest way to make this 
-                    look ultra smooth is to just poll half way to the right to make
-                    the compression of the data form get automatically mapped by opengl
+                    look ultra smooth is to just poll to the right to make
+                    the compression of the 1d data stream get automatically mapped by opengl
                     into emulating the foam of a wave at the beach.
 
                     I left a little comment up above where the right half is, try changing
