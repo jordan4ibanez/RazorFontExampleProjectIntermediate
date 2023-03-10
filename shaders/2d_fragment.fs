@@ -27,13 +27,15 @@ void main() {
         //! This part is new
         //! So we have two choices here:
         //!
-        //! 1. move it forwards to automate depth testing
-        //! 2. or discard it
+        //! 1. move it backwards behind the 2d camera
+        //! 1a. Think of the camera as facing -z as forwards in position 0
+        //!     we are moving it to +z which is behind what we can see
+        //! 2. discard it
         //!
         //! Performance is based on your hardware platform
         //! No one shot solution for optimization woo
-        // gl_FragDepth = 1.0;
-        discard;
+        gl_FragDepth = 1.0;
+        // discard;
     }
 
     // Now we must colorize the rgba while also keeping the original alpha
