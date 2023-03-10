@@ -38,7 +38,6 @@ private double[8 * CHARACTER_LIMIT] textureCoordinateCache;
 private int[6 * CHARACTER_LIMIT] indicesCache;
 /// The count of each of these so we can grab a slice of data fresh out of the oven, delicious!
 private int vertexCount            = 0;
-private int colorCount             = 0;
 private int textureCoordinateCount = 0;
 private int indicesCount           = 0;
 
@@ -85,6 +84,7 @@ struct RazorFontData {
     double[] vertexPositions;
     double[] textureCoordinates;
     int[]    indices;
+    double[] colors;
 }
 /// A simple struct to get the width and height of rendered text
 struct RazorTextSize {
@@ -262,8 +262,8 @@ Allows you to blanket set the color for the entire canvas.
 Be careful though, this overwrites the entire color cache
 after the currently rendered character position in memory!
 */
-void setColorALL(double r, double g, double b, double a = 1.0) {
-    for (int i = colorCount; i < colorCache.length; i += 4) {
+void switchColors(double r, double g, double b, double a = 1.0) {
+    for (int i = vertexCount; i < colorCache.length; i += 4) {
         colorCache[i]     = r;
         colorCache[i + 1] = g;
         colorCache[i + 2] = b;
@@ -418,7 +418,9 @@ RazorFontData flush() {
     RazorFontData returningStruct = RazorFontData(
         vertexCache[0..vertexCount],
         textureCoordinateCache[0..textureCoordinateCount],
-        indicesCache[0..indicesCount]
+        indicesCache[0..indicesCount],
+        // Using the same count because these MUST match
+        colorCache[0..vertexCount]
     );
 
     // Reset the counters
