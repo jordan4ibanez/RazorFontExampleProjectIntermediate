@@ -272,8 +272,7 @@ void switchColors(double r, double g, double b, double a = 1.0) {
 }
 
 /**
-Allows you to blanket a range of characters in the canvas with
-a range of characters.
+Allows you to blanket a range of characters in the canvas with a color.
 
 So if you have: abcdefg
 And run setColorRange(0.5,0.5,0.5, 1, 3, 5)
@@ -299,19 +298,6 @@ void setColorChar(int charIndex, double r, double g, double b, double a = 1.0) {
         colorCache[i + 2] = b;
         colorCache[i + 3] = a;
     }
-}
-
-/// Allows you to get the max amount of characters allowed in canvas
-int getMaxChars() {
-    return CHARACTER_LIMIT;
-}
-
-/**
-Allows you to index the current amount of characters on the canvas. This does
-not include spaces and carriage returns.
-*/
-int getCurrentCharacterIndex() {
-    return vertexCount / 4;
 }
 
 /**
@@ -378,6 +364,19 @@ void setColorPoints(int charIndex, double[4] topLeft, double[4] bottomLeft, doub
             colorCache[startIndex + (externalIndex * 4) + index] = value;
         }
     }
+}
+
+/// Allows you to get the max amount of characters allowed in canvas
+int getMaxChars() {
+    return CHARACTER_LIMIT;
+}
+
+/**
+Allows you to index the current amount of characters on the canvas. This does
+not include spaces and carriage returns.
+*/
+int getCurrentCharacterIndex() {
+    return vertexCount / 4;
 }
 
 /**
