@@ -1,6 +1,6 @@
 import std.stdio;
 
-import Font = razor_font;
+import Font = razor_font.razor_font;
 
 import Window = window.window;
 import Camera = camera.camera;
@@ -69,7 +69,7 @@ void main()
         
         Shader.setUniformMatrix4("2d", "cameraMatrix", Camera.updateGuiMatrix());
         Shader.setUniformMatrix4("2d", "objectMatrix", Camera.setGuiObjectMatrix() );
-        
+
 
         {
             int fontSize = 32;
