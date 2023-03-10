@@ -57,6 +57,17 @@ private immutable double[8] RAW_VERTEX  = [ 0,0, 0,1, 1,1, 1,0 ];
 private immutable int[6]    RAW_INDICES = [ 0,1,2, 2,3,0 ];
 
 /**
+The offset of the text shadowing
+*/
+private double shadowOffsetX = 1;
+private double shadowOffsetY = 1;
+
+/**
+The RGBA components of the shadow
+*/
+private double[4] shadowColor = [0,0,0,1];
+
+/**
 This is a very simple fix for static memory arrays being filled with no.
 A simple on switch for initialization.
 To use RazorFont, you must create a font, so it runs this in there.
