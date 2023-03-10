@@ -313,6 +313,17 @@ void switchColors(double r, double g, double b, double a = 1.0) {
 }
 
 /**
+Allows you to blanket set the shadow color for the entire canvas after the current character.
+*/
+void switchShadowColors(double r, double g, double b, double a = 1.0) {
+    shadowColor[0] = r;
+    shadowColor[1] = g;
+    shadowColor[2] = b;
+    shadowColor[3] = a;
+}
+
+
+/**
 Allows you to blanket a range of characters in the canvas with a color.
 
 So if you have: abcdefg
@@ -560,7 +571,7 @@ void selectFont(string font) {
 /**
 Render to the canvas. Remember: You must run flush() to collect this canvas.
 If rounding is enabled, it will attempt to keep your text aligned with the pixels on screen
-to avoid wavy/blurry/jagged text.
+to avoid wavy/blurry/jagged text. This will automatically render shadows for you as well.
 */
 void renderToCanvas(double posX, double posY, const double fontSize, string text, bool rounding = true) {
 
