@@ -62,6 +62,7 @@ void main()
 
     // You'll find out what this is for later!
     double theBeach = 0.0;
+    double rainbowsX,rainbowsY = 0.0;
     
     while (!Window.shouldClose()) {
 
@@ -83,7 +84,7 @@ void main()
             Font.setColorChar(1, 0,1,0);
             Font.setColorChar(2, 0,0,1);
             
-            int fontSize = 32;
+            int fontSize = 50;
             string textString = "Hello, I'm your test text :)";
 
             Font.RazorTextSize textSize = Font.getTextSize(fontSize, textString);
@@ -202,6 +203,13 @@ void main()
                         waterFlowRight,waterFlowRight,1,1
                     );
                 }
+
+                /**
+                Did you notice that "your" is still solid black?
+                The default buffer color is 0,0,0,1 rgba!
+
+                So now I'm going to show you some magical rainbows.
+                */
 
             }
         }
