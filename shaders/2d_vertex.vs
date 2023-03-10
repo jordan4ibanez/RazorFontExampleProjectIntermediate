@@ -9,7 +9,7 @@ layout (location = 0) in vec2 position;
 layout (location = 1) in vec2 textureCoordinate;
 // Notice: This is too big to be a uniform! Needs to be baked in.
 // We create and destroy text vao every frame anyways.
-layout (location = 2) in vec4 colors;
+layout (location = 2) in vec4 color;
 
 out vec2 outputTextureCoordinate;
 out vec4 newColoring;
@@ -31,5 +31,5 @@ void main() {
     outputTextureCoordinate = textureCoordinate;
 
     // Output vertex position color to frag shader
-    newColoring = colors;
+    newColoring = color;
 }

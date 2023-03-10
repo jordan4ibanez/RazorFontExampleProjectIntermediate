@@ -1,7 +1,7 @@
 #version 410 core
 
 // Frag is for tri texture mapping.
-// This is just your standard old glsl shader.
+// This shader is a bit fancier
 
 in vec2 outputTextureCoordinate;
 in vec4 newColoring;
@@ -16,8 +16,13 @@ void main() {
     // Store what the pixel would have been colored and alphad on the vertex position
     vec4 pixelColor = texture(textureSampler, outputTextureCoordinate);
     
+    // If the alpha of the text is less than the set alpha, use the set alpha
+    // We do this because gl can't tell the difference between blank space and 
+    // text space.
+    float alpha = newColoring.w < pixelColor.w ? newColoring.w : pixelColor.w;
+
     // Now we must colorize the rgba while also keeping the original alpha
-    vec4 rgba = vec4 (newColoring.x, newColoring.y, newColoring.z, pixelColor.w);
+    vec4 rgba = vec4 (newColoring.x, newColoring.y, newColoring.z, alpha);
     
     // newColoring
     fragColor = rgba;
