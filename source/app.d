@@ -347,7 +347,8 @@ void main()
 
         Font.enableShadows();
         Font.switchColors(1,0,1);
-        Font.renderToCanvas(10,10, 24, "hi there");
+        Font.setShadowOffset(10,10);
+        Font.renderToCanvas(10,10, 50, "hi there");
 
         
 
