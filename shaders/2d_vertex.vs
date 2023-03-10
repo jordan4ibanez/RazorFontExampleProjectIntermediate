@@ -1,12 +1,18 @@
 #version 410 core
 
 // Frag is for tri positions.
-// This is just your standard old glsl shader.
+// This is a bit fancier.
+
+const int CHARACTER_LIMIT = 4096;
 
 layout (location = 0) in vec2 position;
 layout (location = 1) in vec2 textureCoordinate;
+// Notice: This is too big to be a uniform! Needs to be baked in.
+// We create and destroy text vao every frame anyways.
+layout (location = 2) in vec4 colors;
 
 out vec2 outputTextureCoordinate;
+out vec4 newColoring;
 
 uniform mat4 cameraMatrix;
 uniform mat4 objectMatrix;
@@ -23,4 +29,7 @@ void main() {
     gl_Position = cameraMatrix * cameraPosition;
 
     outputTextureCoordinate = textureCoordinate;
+
+    // Output vertex position color to frag shader
+    newColoring = colors;
 }
