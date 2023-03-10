@@ -11,7 +11,6 @@ import color;
 import png;
 import std.math;
 import std.array;
-import std.parallelism;
 
 //  ____________________________
 // |         RAZOR FONT         |
@@ -30,8 +29,9 @@ Counts are so we can grab a slice of this information because anything after it 
 private immutable int CHARACTER_LIMIT = 4096;
 /// 4 Vertex positions in a char
 private double[4 * CHARACTER_LIMIT] vertexCache;
-// 4 vec4 colors (so 16 per char) - defaults to 1.0 rgba
-private double[4 * 4 * CHARACTER_LIMIT] colorCache = 0;
+// 4 vec4 colors (so 16 per char) - defaults to 0,0,0,1 rgba
+private double[4 * 4 * CHARACTER_LIMIT] colorCache;
+
 /// 8 (4 vec2) texture coordinate positions in a char
 private double[8 * CHARACTER_LIMIT] textureCoordinateCache;
 /// 6 (2 tris) indices in a char
@@ -58,6 +58,25 @@ These store constant data that is highly repetitive
 */
 private immutable double[8] RAW_VERTEX  = [ 0,0, 0,1, 1,1, 1,0 ];
 private immutable int[6]    RAW_INDICES = [ 0,1,2, 2,3,0 ];
+
+/**
+This is a very simple fix for static memory arrays being filled with no.
+A simple on switch for initialization.
+To use RazorFont, you must create a font, so it runs this in there.
+*/
+private bool initializedColorArray = false;
+void initColorArray() {
+    if (initializedColorArray) {
+        return;
+    }
+    initializedColorArray = true;
+    for (int i = 0; i < 16 * CHARACTER_LIMIT; i += 4) {
+        colorCache[i]     = 0;
+        colorCache[i + 1] = 0;
+        colorCache[i + 2] = 0;
+        colorCache[i + 3] = 1;
+    }
+}
 
 /**
 Caches the current font in use.
@@ -220,6 +239,9 @@ Spacing is how far the letters are from each other. Default: 1.0 pixel
 spaceCharacterSize is how big the ' ' (space) character is. By default, it's 4 pixels wide.
 */
 void createFont(string fileLocation, string name = "", bool trimming = false, double spacing = 1.0, double spaceCharacterSize = 4.0) {
+
+    // This is the fix explained above
+    initColorArray();
 
     //! Place holder for future
     bool kerning = false;
@@ -418,9 +440,13 @@ RazorFontData flush() {
         vertexCache[0..vertexCount],
         textureCoordinateCache[0..textureCoordinateCount],
         indicesCache[0..indicesCount],
-        // Using the same count because these MUST match
         colorCache[0..vertexCount]
     );
+
+    import std.stdio;
+    writeln("=-=-=--=-==-=--=-=-=-=-=-=-=");
+    writeln(colorCache[0..vertexCount]);
+    writeln(colorCache[0..vertexCount].length);
 
     // Reset the counters
     vertexCount = 0;
