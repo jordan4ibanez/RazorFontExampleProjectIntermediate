@@ -21,6 +21,12 @@ void main() {
     // text space.
     float alpha = newColoring.w < pixelColor.w ? newColoring.w : pixelColor.w;
 
+    //! This is a new component in the shader, this allows multilayer 1d (z axis) manual manipulation of
+    //! The current pixel buffer
+    if (alpha <= 0.0) {
+        discard;
+    }
+
     // Now we must colorize the rgba while also keeping the original alpha
     vec4 rgba = vec4 (newColoring.x, newColoring.y, newColoring.z, alpha);
     
