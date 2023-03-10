@@ -575,7 +575,22 @@ to avoid wavy/blurry/jagged text. This will automatically render shadows for you
 */
 void renderToCanvas(double posX, double posY, const double fontSize, string text, bool rounding = true) {
 
+    /**
+    So if shadows are enabled we need to automatically render the vertex data to canvas
+    BEFORE the text gets rendered. This is because even though this data is on the same
+    plane, in 2d the shadows will get written into the pixel buffer in the gpu/software renderer
+    then the text will overwrite the existing buffer.
+
+    Think of this as: The shadow is the background, the text is the foreground
+
+    We need to poll, THEN disable the shadow variable because without that it would be
+    an infinite recursion, aka a stack overflow.
+    */
+    const bool shadowsWereEnabled = shadowsEnabled;
     shadowsEnabled = false;
+    if (shadowsWereEnabled) {
+        
+    }
 
     // Keep square pixels
     if (rounding) {
