@@ -112,14 +112,43 @@ void main()
             );
 
             /**
-
             Looks kinda like a mat4 opengl and vulkan matrix. :P
 
-            So now, straight to the insane asylum. Let's animate this text with colors!
+            So this one just uses pcgRandom to make some crazy colors. Pretty standard. :D
+
+            This is targeting (I'm)
+
+            So you can see that the range func does an inclusive start, exclusive end
+            just like you're used to in D
+            
             */
 
+            Font.setColorRange(7,9, Math.random(),Math.random(),Math.random(),1);
 
+            /**
 
+            So now, straight to the insane asylum. Let's animate this text with colors!
+
+            It's almost spring at the time of writing this, and I want to go fishing.
+
+            So let's make this look like the waves of the ocean.
+            */
+            {
+                import delta_time;
+
+                calculateDelta();
+
+                theBeach += getDelta();
+                
+                if (theBeach > Math.PI) {
+                    theBeach -= Math.PI;
+                }
+
+                double waterFlow = Math.cos(theBeach);
+
+                writeln(waterFlow);
+
+            }
 
 
 
