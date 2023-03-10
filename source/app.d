@@ -165,8 +165,10 @@ void main()
                 Keep in mind, your typewriter arm is already above what would be the next character
                 in the row without a carriage return.
                 -1 shifts it onto the last currently rendered character.
+
+                There's a reason that this isn't a const here, but I recommend you do that to avoid confusion.
                 */
-                const currentIndex = Font.getCurrentCharacterIndex() - 10;
+                int currentIndex = Font.getCurrentCharacterIndex() - 10;
 
                 for (int i = currentIndex; i < currentIndex + 10; i++) {
 
@@ -209,7 +211,38 @@ void main()
                 The default buffer color is 0,0,0,1 rgba!
 
                 So now I'm going to show you some magical rainbows.
+
+                Change this to true, I wanted you to focus on what was
+                happening on the center text before.
                 */
+
+                if (true) {
+
+                    import std.array;
+
+                    // A reminder that if you store this as a string, there is tons of D helper functions!
+                    string myCoolString = "I'm a magical rainbow flying through the sky!";
+
+                    // Let's render at the top left this time
+                    Font.renderToCanvas(0,0, 50, myCoolString);
+
+                    // Oh look, we're using those two vars from earlier
+                    rainbowsX += getDelta() * (10 + Math.random());
+                    rainbowsY += getDelta() * (10 + Math.random());
+                    
+                    rainbowsX = rainbowsX > Math.PI ? rainbowsX - Math.PI : rainbowsX;
+                    rainbowsY = rainbowsY > Math.PI ? rainbowsY - Math.PI : rainbowsY;
+
+                    // Easily 0 yourself back out to I in (I'm)
+                    currentIndex = Font.getCurrentCharacterIndex() - Font.getTextRenderableCharsLength(myCoolString);
+                    writeln(currentIndex);
+
+                    Font.setColorChar(currentIndex, 1,0,0,1);
+
+
+
+
+                }
 
             }
         }
