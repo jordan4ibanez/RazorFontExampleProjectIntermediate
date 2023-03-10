@@ -43,6 +43,8 @@ void main()
                 .addVertices2d(fontData.vertexPositions)
                 .addIndices(fontData.indices)
                 .addTextureCoordinates(fontData.textureCoordinates)
+                // Note here: We added a new layout storage element into our Mesh class!
+                .addColors(fontData.colors) 
                 .setTexture(Texture.getTexture(fileLocation))
                 .finalize();
 
@@ -72,8 +74,23 @@ void main()
 
 
         {
+            // So you can set the letter collors before
+            Font.setColorChar(0, 1,0,0,0.5);
+            Font.setColorChar(1, 0,1,0);
+            Font.setColorChar(2, 0,0,1);
+            
             int fontSize = 32;
             string textString = "Hello, I'm your test text :)";
+
+            // And after
+            Font.setColorChar(3, 0.5,0.5,0.5);
+
+            /**
+            And we can something REALLY fancy!
+            Let's set the second l and o to a blue blend
+            */
+            
+
 
             Font.RazorTextSize textSize = Font.getTextSize(fontSize, textString);
 
