@@ -1,7 +1,7 @@
 /**
 The Sharpest Font Library For D Game Development
 */
-module razor_font;
+module razor_font.razor_font;
 
 import std.conv;
 import std.file;
@@ -10,6 +10,8 @@ import std.typecons;
 import color;
 import png;
 import std.math;
+import std.array;
+import std.parallelism;
 
 //  ____________________________
 // |         RAZOR FONT         |
@@ -28,8 +30,8 @@ Counts are so we can grab a slice of this information because anything after it 
 private immutable int CHARACTER_LIMIT = 4096;
 /// 4 Vertex positions in a char
 private double[4 * CHARACTER_LIMIT] vertexCache;
-// 4 vec4 colors (so 16 per char)
-private double[4 * 4 * CHARACTER_LIMIT] colorCache;
+// 4 vec4 colors (so 16 per char) - defaults to 1.0 rgba
+private double[4 * 4 * CHARACTER_LIMIT] colorCache = 1.0;
 /// 8 (4 vec2) texture coordinate positions in a char
 private double[8 * CHARACTER_LIMIT] textureCoordinateCache;
 /// 6 (2 tris) indices in a char
@@ -299,7 +301,7 @@ void setColorChar(double r, double g, double b, double a, int charIndex) {
     }
 }
 
-/// Allows you to simply get the max amount of characters allowed in canvas
+/// Allows you to get the max amount of characters allowed in canvas
 int getMaxChars() {
     return CHARACTER_LIMIT;
 }
@@ -313,13 +315,70 @@ int getCurrentCharacterIndex() {
 }
 
 /**
-Allows you to work DIRECTLY on the color cache. Use this for crazy custom stuff!
+Allows you to directly work on vertex position colors in a character.
+Using direct points (verbose)
 */
-ref double[4 * 4 * CHARACTER_LIMIT] getColorCacheMutable() {
-    return colorCache;
+void setColorPoints(
+    int charIndex,
+
+    double topLeftR,
+    double topLeftG,
+    double topLeftB,
+    double topLeftA,
+
+    double bottomLeftR,
+    double bottomLeftG,
+    double bottomLeftB,
+    double bottomLeftA,
+
+    double bottomRightR,
+    double bottomRightG,
+    double bottomRightB,
+    double bottomRightA,
+
+    double topRightR,
+    double topRightG,
+    double topRightB,
+    double topRightA
+) {
+    const int startIndex = charIndex * 16;
+    
+    // It's already immensely verbose, let's just add on to this verbosity
+    
+    colorCache[startIndex]      = topLeftR;
+    colorCache[startIndex + 1]  = topLeftG;
+    colorCache[startIndex + 2]  = topLeftB;
+    colorCache[startIndex + 3]  = topLeftA;
+
+    colorCache[startIndex + 4]  = bottomLeftR;
+    colorCache[startIndex + 5]  = bottomLeftG;
+    colorCache[startIndex + 6]  = bottomLeftB;
+    colorCache[startIndex + 7]  = bottomLeftA;
+
+    colorCache[startIndex + 8]  = bottomRightR;
+    colorCache[startIndex + 9]  = bottomRightG;
+    colorCache[startIndex + 10] = bottomRightB;
+    colorCache[startIndex + 11] = bottomRightA;
+
+    colorCache[startIndex + 12] = topRightR;
+    colorCache[startIndex + 13] = topRightG;
+    colorCache[startIndex + 14] = topRightB;
+    colorCache[startIndex + 15] = topRightA;
 }
 
-//! Debug
+/**
+Allows you to directly work on vertex position colors in a character.
+Using direct points (tidy).
+double vec is [R,G,B,A]
+*/
+void setColorPoints(int charIndex, double[4] topLeft, double[4] bottomLeft, double[4] bottomRight, double[4] topRight) {
+    const int startIndex = charIndex * 16;  
+    foreach(externalIndex, vec4; [topLeft, bottomLeft, bottomRight, topRight]) {
+        foreach (index, value; vec4) {
+            colorCache[startIndex + (externalIndex * 4) + index] = value;
+        }
+    }
+}
 
 /**
 Allows you to extract the current font PNG file location automatically
