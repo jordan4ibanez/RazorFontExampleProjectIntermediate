@@ -40,6 +40,7 @@ private int vertexCount            = 0;
 private int textureCoordinateCount = 0;
 private int indicesCount           = 0;
 private int colorCount             = 0;
+private int chars                  = 0;
 
 /**
 This allows batch rendering to a "canvas" ala vertex positionining
@@ -391,10 +392,11 @@ int getMaxChars() {
 
 /**
 Allows you to index the current amount of characters on the canvas. This does
-not include spaces and carriage returns.
+not include spaces and carriage returns. You MUST call renderToCanvas before
+calling this otherwise this will always be 0 when you call it.
 */
 int getCurrentCharacterIndex() {
-    return vertexCount / 4;
+    return chars;
 }
 
 /**
@@ -444,6 +446,7 @@ RazorFontData flush() {
     textureCoordinateCount = 0;
     indicesCount = 0;
     colorCount = 0;
+    chars = 0;
 
     return returningStruct;
 }
@@ -637,6 +640,8 @@ void renderToCanvas(double posX, double posY, const double fontSize, string text
         textureCoordinateCount += 8;
         indicesCount += 6;
         colorCount += 16;
+        // This one is characters literal
+        chars++;
 
         if (vertexCount >= CHARACTER_LIMIT || indicesCount >= CHARACTER_LIMIT) {
             throw new Exception("Character limit is: " ~ to!string(CHARACTER_LIMIT));
