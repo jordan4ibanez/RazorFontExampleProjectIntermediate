@@ -24,6 +24,15 @@ void main() {
     //! This is a new component in the shader, this allows multilayer 1d (z axis) manual manipulation of
     //! The current pixel buffer
     if (alpha <= 0.0) {
+        //! This part is new
+        //! So we have two choices here:
+        //!
+        //! 1. move it forwards to automate depth testing
+        //! 2. or discard it
+        //!
+        //! Performance is based on your hardware platform
+        //! No one shot solution for optimization woo
+        // gl_FragDepth = 1.0;
         discard;
     }
 
