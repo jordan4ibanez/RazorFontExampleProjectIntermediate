@@ -40,6 +40,7 @@ private int[6 * CHARACTER_LIMIT] indicesCache;
 private int vertexCount            = 0;
 private int textureCoordinateCount = 0;
 private int indicesCount           = 0;
+private int colorCount             = 0;
 
 /**
 This allows batch rendering to a "canvas" ala vertex positionining
@@ -49,10 +50,6 @@ This is optional though, you can do whatever you want!
 private double canvasWidth  = -1;
 private double canvasHeight = -1;
 
-/**
-This allows switching between colors in between rendering to canvas
-*/
-private double[4] currentColor = [1,1,1,1];
 /**
 These store constant data that is highly repetitive
 */
@@ -285,7 +282,7 @@ Be careful though, this overwrites the entire color cache
 after the currently rendered character position in memory!
 */
 void switchColors(double r, double g, double b, double a = 1.0) {
-    for (int i = vertexCount; i < colorCache.length; i += 4) {
+    for (int i = colorCount; i < colorCache.length; i += 4) {
         colorCache[i]     = r;
         colorCache[i + 1] = g;
         colorCache[i + 2] = b;
@@ -440,18 +437,14 @@ RazorFontData flush() {
         vertexCache[0..vertexCount],
         textureCoordinateCache[0..textureCoordinateCount],
         indicesCache[0..indicesCount],
-        colorCache[0..vertexCount]
+        colorCache[0..colorCount]
     );
-
-    import std.stdio;
-    writeln("=-=-=--=-==-=--=-=-=-=-=-=-=");
-    writeln(colorCache[0..vertexCount]);
-    writeln(colorCache[0..vertexCount].length);
 
     // Reset the counters
     vertexCount = 0;
     textureCoordinateCount = 0;
     indicesCount = 0;
+    colorCount = 0;
 
     return returningStruct;
 }
@@ -644,6 +637,7 @@ void renderToCanvas(double posX, double posY, const double fontSize, string text
         vertexCount  += 8;
         textureCoordinateCount += 8;
         indicesCount += 6;
+        colorCount += 16;
 
         if (vertexCount >= CHARACTER_LIMIT || indicesCount >= CHARACTER_LIMIT) {
             throw new Exception("Character limit is: " ~ to!string(CHARACTER_LIMIT));
