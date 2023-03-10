@@ -313,6 +313,17 @@ void switchColors(double r, double g, double b, double a = 1.0) {
 }
 
 /**
+Allows you to set the offet of the text shadowing.
+
+This is RELATIVE via the font size so it will remain consistent
+across any font size!
+*/
+void setShadowOffset(double x, double y) {
+    shadowOffsetX = x;
+    shadowOffsetY = y;
+}
+
+/**
 Allows you to blanket set the shadow color for the entire canvas after the current character.
 */
 void switchShadowColors(double r, double g, double b, double a = 1.0) {
@@ -589,7 +600,7 @@ void renderToCanvas(double posX, double posY, const double fontSize, string text
     const bool shadowsWereEnabled = shadowsEnabled;
     shadowsEnabled = false;
     if (shadowsWereEnabled) {
-        
+        renderToCanvas(posX + shadowOffsetX, posY + shadowOffsetY, fontSize, text, rounding);
     }
 
     // Keep square pixels
