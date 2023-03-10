@@ -2,10 +2,11 @@ import std.stdio;
 
 import Font = razor_font.razor_font;
 
-import Window = window.window;
-import Camera = camera.camera;
-import Shader = shader.shader;
+import Window  = window.window;
+import Camera  = camera.camera;
+import Shader  = shader.shader;
 import Texture = texture.texture;
+import Math    = doml.math;
 import mesh.mesh;
 import doml.vector_2d;
 
@@ -58,6 +59,9 @@ void main()
 
     // We're only going to use the mc font this time
     Font.selectFont("mc");
+
+    // You'll find out what this is for later!
+    double theBeach = 0.0;
     
     while (!Window.shouldClose()) {
 
@@ -86,10 +90,38 @@ void main()
             Font.setColorChar(3, 0.5,0.5,0.5);
 
             /**
-            And we can something REALLY fancy!
-            Let's set the second l and o to a blue blend
-            */
+            Let's do something REALLY fancy!
             
+            Let's set the second l and o to a blue to white blend
+            */
+
+            Font.setColorPoints(4,/*Left points*/[0.,0,1,1],[0.,0,1,1], /*Right points*/[1.,1,1,1],[1.,1,1,1]);
+            Font.setColorPoints(5,/*Left points*/[0.,0,1,1],[0.,0,1,1], /*Right points*/[1.,1,1,1],[1.,1,1,1]);
+
+            /**
+            Now let's get even crazier! Let's do primary colors on the first 3,
+            and yellow on the last one, I'm going to use the super verbose version of setColorPoints.
+            It's overloaded :D
+            */
+            Font.setColorPoints(
+                6,
+                1,0,0,1,
+                0,1,0,1,
+                0,0,1,1,
+                1,1,0,1,
+            );
+
+            /**
+
+            Looks kinda like a mat4 opengl and vulkan matrix. :P
+
+            So now, straight to the insane asylum. Let's animate this text with colors!
+            */
+
+
+
+
+
 
 
             Font.RazorTextSize textSize = Font.getTextSize(fontSize, textString);
