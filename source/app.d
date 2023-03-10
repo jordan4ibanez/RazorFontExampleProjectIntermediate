@@ -343,6 +343,16 @@ void main()
             }
         }
 
+        //* Begin testing ============================================
+
+        Font.enableShadows();
+        Font.switchColors(1,0,1);
+        Font.renderToCanvas(10,10, 24, "hi there");
+
+        
+
+        //! End testing ==============================================
+
         /**
         One last thing I have to let you know. Did you notice that we
         never set the font during the loop of the program?
