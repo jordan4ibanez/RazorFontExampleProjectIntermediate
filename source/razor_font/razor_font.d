@@ -68,6 +68,17 @@ The RGBA components of the shadow
 private double[4] shadowColor = [0,0,0,1];
 
 /**
+Are shadows enabled?
+
+They get disabled everytime you run flush().
+This is so there basically isn't a "shadow memory leak".
+
+As in: Oops I forgot to disable shadows now everything has a 
+shadow for some reason!
+*/
+private bool shadowsEnabled = false;
+
+/**
 This is a very simple fix for static memory arrays being filled with no.
 A simple on switch for initialization.
 To use RazorFont, you must create a font, so it runs this in there.
@@ -444,6 +455,7 @@ void render() {
 RazorFontData flush() {
 
     fontLock = false;
+    shadowsEnabled = false;
     
     RazorFontData returningStruct = RazorFontData(
         vertexCache[0..vertexCount],
