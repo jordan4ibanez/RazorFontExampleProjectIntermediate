@@ -31,7 +31,7 @@ private immutable int CHARACTER_LIMIT = 4096;
 /// 4 Vertex positions in a char
 private double[4 * CHARACTER_LIMIT] vertexCache;
 // 4 vec4 colors (so 16 per char) - defaults to 1.0 rgba
-private double[4 * 4 * CHARACTER_LIMIT] colorCache = 1.0;
+private double[4 * 4 * CHARACTER_LIMIT] colorCache = 0;
 /// 8 (4 vec2) texture coordinate positions in a char
 private double[8 * CHARACTER_LIMIT] textureCoordinateCache;
 /// 6 (2 tris) indices in a char
@@ -279,7 +279,7 @@ So if you have: abcdefg
 And run setColorRange(0.5,0.5,0.5, 1, 3, 5)
 Now e and f are gray. Alpha 1.0
 */
-void setColorRange(double r, double g, double b, double a, int start, int end) {
+void setColorRange(int start, int end, double r, double g, double b, double a) {
     for (int i = start * 16; i < end * 16; i += 4) {
         colorCache[i]     = r;
         colorCache[i + 1] = g;
@@ -291,7 +291,7 @@ void setColorRange(double r, double g, double b, double a, int start, int end) {
 /**
 Allows you to set individual character colors
 */
-void setColorChar(double r, double g, double b, double a, int charIndex) {
+void setColorChar(int charIndex, double r, double g, double b, double a = 1.0) {
     const int startIndex = charIndex * 16;
     for (int i = startIndex; i < startIndex + 16; i += 4) {
         colorCache[i]     = r;
