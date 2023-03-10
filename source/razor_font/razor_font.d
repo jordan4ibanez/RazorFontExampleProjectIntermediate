@@ -70,10 +70,10 @@ private double[4] shadowColor = [0,0,0,1];
 /**
 Are shadows enabled?
 
-They get disabled everytime you run flush().
+They get disabled everytime you run renderToCanvas().
 This is so there basically isn't a "shadow memory leak".
 
-As in: Oops I forgot to disable shadows now everything has a 
+As in: Oops I forgot to disable shadows now everything after has a 
 shadow for some reason!
 */
 private bool shadowsEnabled = false;
@@ -431,6 +431,20 @@ string getCurrentFontTextureFileLocation() {
     return currentFont.fileLocation;
 }
 
+/**
+Turns on shadowing.
+
+Rememeber: This creates twice as many characters because
+you have to render a background, then a foreground.
+
+You can also do some crazy stuff with shadows because the shadow
+colors are stored in the same color cache as regular text.
+*/
+void enableShadows() {
+    shadowsEnabled = true;
+}
+
+
 /// Allows you to render to a canvas using top left as a base position
 void setCanvasSize(double width, double height) {
     // Dividing by 2.0 because my test environment shader renders to center on pos(0,0) top left
@@ -455,7 +469,6 @@ void render() {
 RazorFontData flush() {
 
     fontLock = false;
-    shadowsEnabled = false;
     
     RazorFontData returningStruct = RazorFontData(
         vertexCache[0..vertexCount],
@@ -550,6 +563,8 @@ If rounding is enabled, it will attempt to keep your text aligned with the pixel
 to avoid wavy/blurry/jagged text.
 */
 void renderToCanvas(double posX, double posY, const double fontSize, string text, bool rounding = true) {
+
+    shadowsEnabled = false;
 
     // Keep square pixels
     if (rounding) {
