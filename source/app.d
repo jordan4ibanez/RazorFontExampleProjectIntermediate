@@ -75,7 +75,7 @@ void main()
 
 
         {
-            // So you can set the letter collors before
+            // So you can set the letter colors before....
             Font.setColorChar(0, 1,0,0,0.5);
             Font.setColorChar(1, 0,1,0);
             Font.setColorChar(2, 0,0,1);
@@ -91,7 +91,11 @@ void main()
 
             Font.renderToCanvas(posX, posY, fontSize, textString);
 
-            // And after
+            /**
+            ...And after rendering to canvas. The color cache is always there.
+            I recommend doing it after so you can work backwards from the next position/
+            This is explained more later on!
+            */
             Font.setColorChar(3, 0.5,0.5,0.5);
 
             /**
@@ -107,6 +111,8 @@ void main()
             Now let's get even crazier! Let's do primary colors on the first 3,
             and yellow on the last one, I'm going to use the super verbose version of setColorPoints.
             It's overloaded :D
+
+            This is going into the letter I in (I'm)
             */
             Font.setColorPoints(
                 6,
@@ -119,15 +125,14 @@ void main()
             /**
             Looks kinda like a mat4 opengl and vulkan matrix. :P
 
+
             So this one just uses pcgRandom to make some crazy colors. Pretty standard. :D
 
-            This is targeting (I'm)
-
-            So you can see that the range func does an inclusive start, exclusive end
-            just like you're used to in D
-            
+            You can see that the range func does an inclusive start, exclusive end
+            just like you're used to in D by the following code:
             */
 
+            // This is targeting ('m) in (I'm)
             Font.setColorRange(7,9, Math.random(),Math.random(),Math.random(),1);
 
             /**
@@ -171,10 +176,12 @@ void main()
                     // We want this to be a smooth flowing animation loop
                     // So we're gonna use some fancy math
                     const double left = theBeach + cast(double)i;
-                    const double right = left + 1.0; // This is what I'm talking about below.
-
-                    double waterFlowLeft  = (Math.sin(left)  / 2.0) + 0.5;
-                    double waterFlowRight = (Math.sin(right) / 2.0) + 0.5;
+                    //! This is what I'm talking about below.
+                    const double right = left + 1.0; 
+                    
+                    const double foam = 0.5;
+                    double waterFlowLeft  = (Math.sin(left)  / 2.0) + foam;
+                    double waterFlowRight = (Math.sin(right) / 2.0) + foam;
 
                     /**
                     So what we're doing here is basically creating a fixed,
@@ -193,6 +200,8 @@ void main()
 
                     What you just did, was you created an overlap of the polling
                     into the data stream of the next character, looks pretty neat huh?
+
+                    Makes things act a bit random and I suppose you could say "The sea gets rougher"
                     */
                     Font.setColorPoints(i,
                         waterFlowLeft,waterFlowLeft,1,1, // left
@@ -205,6 +214,15 @@ void main()
                 /**
                 Did you notice that "your" is still solid black?
                 The default buffer color is 0,0,0,1 rgba!
+
+                Now remember, colors are in the color cache. If you want to reset the entire cache.
+                Render, it moves the cursor back to 0, then run:
+                Font.switchColors(r,g,b,a);
+
+                You don't have to do this at all, but I thought someone could use it for something.
+                So I added it in!
+
+
 
                 So now I'm going to show you some magical rainbows.
 
@@ -230,7 +248,7 @@ void main()
                     }
 
 
-                    // A reminder that if you store this as a string, there is tons of D helper functions!
+                    // A reminder that if you store this as a string, there are tons of D helper functions!
                     string myCoolString = "I'm a magical rainbow flying through the sky!";
 
                     // Let's render at the top left this time
@@ -248,7 +266,7 @@ void main()
                     // Easily 0 yourself back out to where you want. So here is: I in (I'm)
                     currentIndex = Font.getCurrentCharacterIndex() - Font.getTextRenderableCharsLength(myCoolString);
 
-                    // We're going to run this like it's a game, and your font is LITERALLY walking
+                    // We're going to run this like it's a game, and your text is literally walking through a 2d noise map
                     for(int i = currentIndex; i < currentIndex + myCoolString.length; i++) {
 
                         // I put this here because I don't want to type cast(double) a bunch of times
@@ -275,7 +293,7 @@ void main()
                         So let's get that noise.
 
                         What we're doing here is we're polling RGB 100.0 units away from eachother
-                        in the 2d perlin map.
+                        in the 2d noise map.
 
                         I wrote it out VERY verbosely so you can see exactly what this is doing!
                         */
@@ -335,6 +353,7 @@ void main()
         Have fun. :D
         */
         
+        // This is our only OpenGL render call in this entire program!
         Font.render();
 
         // Update the gl window yada yada
