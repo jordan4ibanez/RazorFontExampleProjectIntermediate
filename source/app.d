@@ -212,7 +212,7 @@ void main()
                 happening on the center text before.
                 */
 
-                if (true) {
+                if (false) {
 
                     // We're going to use a special library I have for this :)
                     import fast_noise;
@@ -234,7 +234,7 @@ void main()
                     string myCoolString = "I'm a magical rainbow flying through the sky!";
 
                     // Let's render at the top left this time
-                    Font.renderToCanvas(0,0, 50, myCoolString);
+                    Font.renderToCanvas(0,0, 62, myCoolString);
 
                     /*
                     Oh look, we're using those two vars from earlier.
