@@ -86,6 +86,14 @@ void main()
             int fontSize = 32;
             string textString = "Hello, I'm your test text :)";
 
+            Font.RazorTextSize textSize = Font.getTextSize(fontSize, textString);
+
+            // Now we're going to move slightly above the center point of the window
+            double posX = (Window.getWidth / 2.0) - (textSize.width / 2.0);
+            double posY = (Window.getHeight / 2.0) - (textSize.height / 2.0);
+
+            Font.renderToCanvas(posX, posY, fontSize, textString);
+
             // And after
             Font.setColorChar(3, 0.5,0.5,0.5);
 
@@ -141,26 +149,72 @@ void main()
                 theBeach += getDelta();
                 
                 if (theBeach > Math.PI) {
-                    theBeach -= Math.PI;
+                    theBeach -= Math.PI2;
                 }
 
-                double waterFlow = Math.cos(theBeach);
+                /*
+                So you know how we rendered to the canvas before hand?
 
-                writeln(waterFlow);
+                Well, now we have the amount of characters currently on
+                the canvas, so we can work backwards from that with ease!
+
+                You could also use this to set up the next word in a multi-render
+                to canvas to do some even crazier stuff :)
+
+                Keep in mind, your typewriter arm is already above what would be the next character
+                in the row without a carriage return.
+                -1 shifts it onto the last currently rendered character.
+                */
+                const currentIndex = Font.getCurrentCharacterIndex() - 10;
+
+                for (int i = currentIndex; i < currentIndex + 10; i++) {
+
+                    // We want this to be a smooth flowing animation loop
+                    // So we're gonna use some fancy math
+                    const double left = theBeach + cast(double)i;
+                    const double right = left + 2.5; // This is what I'm talking about below.
+
+                    double waterFlowLeft  = (Math.sin(left)  / 2.0) + 0.5;
+                    double waterFlowRight = (Math.sin(right) / 2.0) + 0.5;
+
+                    /**
+                    So what we're doing here is basically creating a fixed,
+                    smooth loop of data that's equal to an oscillating wave
+                    form on a 2d plotter. We're starting from the left point
+                    of that (data + index) to get somewhere on that data stream.
+                    That's the left side done, so the easiest way to make this 
+                    look ultra smooth is to just poll half way to the right to make
+                    the compression of the data form get automatically mapped by opengl
+                    into emulating the foam of a wave at the beach.
+
+                    I left a little comment up above where the right half is, try changing
+                    that to 2.5 or 3.5 and see what happens. :)
+
+                    Now don't read the next part until you've tried that.
+
+                    What you just did, was you created an overlap of the polling
+                    into the data stream of the next character, looks pretty neat huh?
+                    */
+                    Font.setColorPoints(i,
+                        waterFlowLeft,waterFlowLeft,1,1, // left
+                        waterFlowLeft,waterFlowLeft,1,1,
+                        waterFlowRight,waterFlowRight,1,1, //right
+                        waterFlowRight,waterFlowRight,1,1
+                    );
+                }
 
             }
-
-
-
-
-            Font.RazorTextSize textSize = Font.getTextSize(fontSize, textString);
-
-            // Now we're going to move slightly above the center point of the window
-            double posX = (Window.getWidth / 2.0) - (textSize.width / 2.0);
-            double posY = (Window.getHeight / 2.0) - (textSize.height / 2.0);
-
-            Font.renderToCanvas(posX, posY, fontSize, textString);
         }
+
+        /**
+        One last thing I have to let you know. Did you notice that we
+        never set the font during the loop of the program?
+
+        If your program has only one font, you only need to set it at the
+        entry point and never look at it again!
+
+        Have fun. :D
+        */
         
         Font.render();
 
