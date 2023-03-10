@@ -25,11 +25,6 @@ void main()
     Shader.createUniform("2d", "objectMatrix");
     Shader.createUniform("2d", "textureSampler");
 
-    Shader.create("3d", "shaders/regular_vertex.vs", "shaders/regular_fragment.fs");
-    Shader.createUniform("3d", "cameraMatrix");
-    Shader.createUniform("3d", "objectMatrix");
-    Shader.createUniform("3d", "textureSampler");
-
     Font.setRenderTargetAPICallString(
         (string input){
             Texture.addTexture(input);
@@ -62,7 +57,8 @@ void main()
 
     // You'll find out what this is for later!
     double theBeach = 0.0;
-    double rainbowsX,rainbowsY = 0.0;
+    double rainbowsX = 0.0;
+    double rainbowsY = 0.0;
     
     while (!Window.shouldClose()) {
 
@@ -218,7 +214,21 @@ void main()
 
                 if (true) {
 
-                    import std.array;
+                    // We're going to use a special library I have for this :)
+                    import fast_noise;
+                    FNLState noise = fnlCreateState(1337);
+                    noise.noise_type = FNLNoiseType.FNL_NOISE_OPENSIMPLEX2S;
+                    noise.frequency = 1.0;
+
+                    /**
+                    So the noise can go -1, 1 so we're gonna fix that!
+                    Now it can only go from 0.0 to 1.0 to match our RGB :D
+                    */
+                    double fixNoise(double input) {
+                        input /= 2.0;
+                        return Math.clamp(0.0, 1.0, input + 0.5);
+                    }
+
 
                     // A reminder that if you store this as a string, there is tons of D helper functions!
                     string myCoolString = "I'm a magical rainbow flying through the sky!";
@@ -226,24 +236,92 @@ void main()
                     // Let's render at the top left this time
                     Font.renderToCanvas(0,0, 50, myCoolString);
 
-                    // Oh look, we're using those two vars from earlier
-                    rainbowsX += getDelta() * (10 + Math.random());
-                    rainbowsY += getDelta() * (10 + Math.random());
+                    /*
+                    Oh look, we're using those two vars from earlier.
+
+                    Let's send them on a long journey through the data void.
+                    */
+                    rainbowsX += getDelta();
+                    rainbowsY += getDelta();
                     
-                    rainbowsX = rainbowsX > Math.PI ? rainbowsX - Math.PI : rainbowsX;
-                    rainbowsY = rainbowsY > Math.PI ? rainbowsY - Math.PI : rainbowsY;
 
-                    // Easily 0 yourself back out to I in (I'm)
+                    // Easily 0 yourself back out to where you want. So here is: I in (I'm)
                     currentIndex = Font.getCurrentCharacterIndex() - Font.getTextRenderableCharsLength(myCoolString);
-                    writeln(currentIndex);
 
-                    Font.setColorChar(currentIndex, 1,0,0,1);
+                    // We're going to run this like it's a game, and your font is LITERALLY walking
+                    for(int i = currentIndex; i < currentIndex + myCoolString.length; i++) {
 
+                        // I put this here because I don't want to type cast(double) a bunch of times
+                        double rootX = cast(double)i;
 
+                        /**
+                        Okay, time to get those dang ol positions
+                        */
+                        double topLeftX = rootX + rainbowsX;
+                        double topLeftY = rainbowsY;
 
+                        double bottomLeftX = rootX + rainbowsX;
+                        double bottomLeftY = 1 + rainbowsY;
 
+                        double bottomRightX = 1 + rootX + rainbowsX;
+                        double bottomRightY = 1 + rainbowsY;
+
+                        double topRightX = 1 + rootX + rainbowsX;
+                        double topRightY = rainbowsY;
+
+                        /**
+                        Now we have a 2d quad in pure positions! Neat!
+
+                        So let's get that noise.
+
+                        What we're doing here is we're polling RGB 100.0 units away from eachother
+                        in the 2d perlin map.
+
+                        I wrote it out VERY verbosely so you can see exactly what this is doing!
+                        */
+
+                        // Uncomment this to see the data stream
+                        // if (i == 23) {
+                        //     writeln(fixNoise(fnlGetNoise2D(&noise, topLeftX, topLeftY)));
+                        // }
+                        
+                        double[4] topLeftRGB = [
+                            fixNoise(fnlGetNoise2D(&noise, topLeftX,         topLeftY)),
+                            fixNoise(fnlGetNoise2D(&noise, topLeftX + 100.0, topLeftY)),
+                            fixNoise(fnlGetNoise2D(&noise, topLeftX + 200.0, topLeftY)),
+                            1 // Alpha
+                        ];
+
+                        double[4] bottomLeftRGB = [
+                            fixNoise(fnlGetNoise2D(&noise, bottomLeftX,         bottomLeftY)),
+                            fixNoise(fnlGetNoise2D(&noise, bottomLeftX + 100.0, bottomLeftY)),
+                            fixNoise(fnlGetNoise2D(&noise, bottomLeftX + 200.0, bottomLeftY)),
+                            1 // Alpha
+                        ];
+
+                        double[4] bottomRightRGB = [
+                            fixNoise(fnlGetNoise2D(&noise, bottomRightX,         bottomRightY)),
+                            fixNoise(fnlGetNoise2D(&noise, bottomRightX + 100.0, bottomRightY)),
+                            fixNoise(fnlGetNoise2D(&noise, bottomRightX + 200.0, bottomRightY)),
+                            1 // Alpha
+                        ];
+
+                        double[4] topRightRGB = [
+                            fixNoise(fnlGetNoise2D(&noise, topRightX,         topRightY)),
+                            fixNoise(fnlGetNoise2D(&noise, topRightX + 100.0, topRightY)),
+                            fixNoise(fnlGetNoise2D(&noise, topRightX + 200.0, topRightY)),
+                            1 // Alpha
+                        ];
+                        
+                        // Now let's apply that to our text
+                        Font.setColorPoints(i, topLeftRGB, bottomLeftRGB, bottomRightRGB, topRightRGB);
+
+                        /**
+                        Tada! Rainbow text wooo
+                        */
+
+                    }
                 }
-
             }
         }
 
@@ -265,7 +343,6 @@ void main()
 
     // Just regular ol opengl cleanup
     Shader.deleteShader("2d");
-    Shader.deleteShader("3d");
     Texture.cleanUp();
     Window.destroy();
 
