@@ -8,7 +8,8 @@
 		"bindbc-glfw": "~>1.0.1",
 		"bindbc-opengl": "~>1.0.4",
 		"delta_time": "~>1.0.5",
-		"doml": "~>1.0.1"
+		"doml": "~>1.0.1",
+		"fast_noise": "~>1.0.5"
 	},
 	"description": "An advanced tutorial on how to user RazorFont.",
 	"libs-posix": [
