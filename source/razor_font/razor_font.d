@@ -10,7 +10,6 @@ import std.typecons;
 import color;
 import png;
 import std.math;
-import std.array;
 
 //  ____________________________
 // |         RAZOR FONT         |
