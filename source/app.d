@@ -348,12 +348,20 @@ void main()
         Font.enableShadows();
         Font.switchColors(1,0,0);
 
-        Font.setShadowOffset(10,10);
-        Font.switchShadowColor(0,0,0);
-        Font.disableShadowColoring();
+        // Font.setShadowOffset(1,1);
+        Font.switchShadowColor(0,0,1);
+        // Font.disableShadowColoring();
 
-        Font.renderToCanvas(10,10, 50, "hi there");
-        Font.renderToCanvas(10,55, 50, "I am also saying hi");
+        int fontSize = 50;
+        string hello = "hi there";
+
+        const auto textSize = Font.getTextSize(fontSize, hello);
+
+        double posX = Window.getWidth - textSize.width;
+        double posY = Window.getHeight - textSize.height;
+
+        Font.renderToCanvas(posX, posY, fontSize, hello);
+        // Font.renderToCanvas(10,55, 50, "I am also saying hi");
 
         
 
