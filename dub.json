@@ -12,7 +12,7 @@
 		"fast_noise": "~>1.0.5",
 		"razorfont": "~>1.2.1"
 	},
-	"description": "An advanced tutorial on how to user RazorFont.",
+	"description": "An intermediate tutorial on how to user RazorFont.",
 	"libs-posix": [
 		"z"
 	],
