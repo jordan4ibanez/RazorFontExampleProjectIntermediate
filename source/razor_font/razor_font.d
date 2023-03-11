@@ -559,10 +559,16 @@ RazorTextSize getTextSize(double fontSize, string text) {
         accumulatorX += (currentFont.map[character][8] * fontSize) + spacing;
     }
 
-    // Now add a last bit of the height offset
+    // Add a last bit of the height offset
     accumulatorY += fontSize;
-    // Now remove the last bit of spacing
+    // Remove the last bit of spacing
     accumulatorX -= spacing;
+
+    // Finally, if shadowing is enabled, add in shadowing offset
+    if (shadowsEnabled) {
+        accumulatorX += (shadowOffsetX * fontSize);
+        accumulatorY += (shadowOffsetY * fontSize);
+    }
 
     return RazorTextSize(accumulatorX, accumulatorY);
 }
