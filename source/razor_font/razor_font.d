@@ -57,10 +57,17 @@ private immutable double[8] RAW_VERTEX  = [ 0,0, 0,1, 1,1, 1,0 ];
 private immutable int[6]    RAW_INDICES = [ 0,1,2, 2,3,0 ];
 
 /**
-The offset of the text shadowing
+The offset of the text shadowing.
+
+Note: Since offset is only proportional to the font size when rendering,
+the offset is completely detached from the font spec!
+
+The font spec has no bearing on how the offset is calculated. Only font size.
+
+0.05 by default because I think it looks nice. :)
 */
-private double shadowOffsetX = 1;
-private double shadowOffsetY = 1;
+private double shadowOffsetX = 0.05;
+private double shadowOffsetY = 0.05;
 
 /**
 The RGBA components of the shadow
@@ -325,8 +332,8 @@ This is RELATIVE via the font size so it will remain consistent
 across any font size!
 */
 void setShadowOffset(double x, double y) {
-    shadowOffsetX = x;
-    shadowOffsetY = y;
+    shadowOffsetX = x / 10.0;
+    shadowOffsetY = y / 10.0;
 }
 
 /**
@@ -736,7 +743,7 @@ void renderToCanvas(double posX, double posY, const double fontSize, string text
                 shadowColor[3]
             );
         }
-        renderToCanvas(posX + shadowOffsetX, posY + shadowOffsetY, fontSize, text, rounding);
+        renderToCanvas(posX + (shadowOffsetX * fontSize), posY + (shadowOffsetY * fontSize), fontSize, text, rounding);
     }
     
     // Turn this back on because it can become a confusing nightmare
