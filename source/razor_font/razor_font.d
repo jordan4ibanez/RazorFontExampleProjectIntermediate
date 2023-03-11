@@ -79,6 +79,12 @@ shadow for some reason!
 private bool shadowsEnabled = false;
 
 /**
+Allows turning off the shadowing color fill for performance.
+Say you want a rainbow shadow, you can use this for that.
+*/
+private bool shadowColoring = true;
+
+/**
 This is a very simple fix for static memory arrays being filled with no.
 A simple on switch for initialization.
 To use RazorFont, you must create a font, so it runs this in there.
@@ -326,7 +332,7 @@ void setShadowOffset(double x, double y) {
 /**
 Allows you to blanket set the shadow color for the entire canvas after the current character.
 */
-void switchShadowColors(double r, double g, double b, double a = 1.0) {
+void switchShadowColor(double r, double g, double b, double a = 1.0) {
     shadowColor[0] = r;
     shadowColor[1] = g;
     shadowColor[2] = b;
@@ -586,23 +592,6 @@ to avoid wavy/blurry/jagged text. This will automatically render shadows for you
 */
 void renderToCanvas(double posX, double posY, const double fontSize, string text, bool rounding = true) {
 
-    /**
-    So if shadows are enabled we need to automatically render the vertex data to canvas
-    BEFORE the text gets rendered. This is because even though this data is on the same
-    plane, in 2d the shadows will get written into the pixel buffer in the gpu/software renderer
-    then the text will overwrite the existing buffer.
-
-    Think of this as: The shadow is the background, the text is the foreground
-
-    We need to poll, THEN disable the shadow variable because without that it would be
-    an infinite recursion, aka a stack overflow.
-    */
-    const bool shadowsWereEnabled = shadowsEnabled;
-    shadowsEnabled = false;
-    if (shadowsWereEnabled) {
-        renderToCanvas(posX + shadowOffsetX, posY + shadowOffsetY, fontSize, text, rounding);
-    }
-
     // Keep square pixels
     if (rounding) {
         posX = round(posX);
@@ -722,15 +711,56 @@ void renderToCanvas(double posX, double posY, const double fontSize, string text
             throw new Exception("Character limit is: " ~ to!string(CHARACTER_LIMIT));
         }
     }
+
+    /**
+    Because there is no Z buffer in 2d, OpenGL seems to utilize 
+
+    We need to poll, THEN disable the shadow variable because without that it would be
+    an infinite recursion, aka a stack overflow.
+    */
+    const bool shadowsWereEnabled = shadowsEnabled;
+    shadowsEnabled = false;
+    if (shadowsWereEnabled) {
+        const int textLength = getTextRenderableCharsLength(text);
+        const int currentIndex = getCurrentCharacterIndex();
+        if (shadowColoring) {
+            setColorRange(
+                currentIndex,
+                currentIndex + textLength,
+                shadowColor[0],
+                shadowColor[1],
+                shadowColor[2],
+                shadowColor[3]
+            );
+        }
+        renderToCanvas(posX + shadowOffsetX, posY + shadowOffsetY, fontSize, text, rounding);
+    }
+    
+    // Turn this back on because it can become a confusing nightmare
+    shadowColoring = true;
 }
 
 /**
 Processes your input string, then sends you how long it would be when rendering.
 Helpful for repositioning your "cursor" in the texture cache!
+
+Note: This will return cursor position into the beginning index of the background
+of the shadowed text if you're using it for subtraction.
 */
 int getTextRenderableCharsLength(string input) {
     import std.array;
     return cast(int)input.replace(" ", "").replace("\n", "").length;
+}
+
+/**
+Processes your input text string with shadows to see how long it would be when rendering.
+Helpful for positioning your "cursor" in the texture cache!
+
+Note: This will return cursor position into the beginning index of the foreground
+of the shadowed text if you're using it for subtraction.
+*/
+int getTextRenderableCharsLengthWithShadows(string input) {
+    return getTextRenderableCharsLength(input) * 2;
 }
 
 //! ============================ END GRAPHICS DISPATCH =============================
