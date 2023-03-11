@@ -1,6 +1,6 @@
 import std.stdio;
 
-import Font = razor_font.razor_font;
+import Font = razor_font;
 
 import Window  = window.window;
 import Camera  = camera.camera;
@@ -342,37 +342,6 @@ void main()
                 }
             }
         }
-
-        //* Begin testing ============================================
-
-        Font.enableShadows();
-        Font.switchColors(1,0,0);
-
-        // Font.setShadowOffset(1,1);
-        Font.switchShadowColor(0,0,1);
-        // Font.disableShadowColoring();
-
-        int fontSize = 50;
-        string hello = "hi there";
-
-        auto textSize = Font.getTextSize(fontSize, hello);
-
-        double posX = Window.getWidth - textSize.width;
-        double posY = Window.getHeight - textSize.height;
-
-        Font.renderToCanvas(posX, posY, fontSize, hello);
-
-
-        string infoString = "Sizing auto calculates shadows";
-
-        textSize = Font.getTextSize(fontSize, infoString);
-
-        Font.renderToCanvas(0, Window.getHeight - textSize.height, fontSize, infoString);
-        // Font.renderToCanvas(10,55, 50, "I am also saying hi");
-
-        
-
-        //! End testing ==============================================
 
         /**
         One last thing I have to let you know. Did you notice that we
