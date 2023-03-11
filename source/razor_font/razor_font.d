@@ -82,7 +82,7 @@ private bool shadowsEnabled = false;
 Allows turning off the shadowing color fill for performance.
 Say you want a rainbow shadow, you can use this for that.
 */
-private bool shadowColoring = true;
+private bool shadowColoringEnabled = true;
 
 /**
 This is a very simple fix for static memory arrays being filled with no.
@@ -723,7 +723,7 @@ void renderToCanvas(double posX, double posY, const double fontSize, string text
     if (shadowsWereEnabled) {
         const int textLength = getTextRenderableCharsLength(text);
         const int currentIndex = getCurrentCharacterIndex();
-        if (shadowColoring) {
+        if (shadowColoringEnabled) {
             setColorRange(
                 currentIndex,
                 currentIndex + textLength,
@@ -737,7 +737,7 @@ void renderToCanvas(double posX, double posY, const double fontSize, string text
     }
     
     // Turn this back on because it can become a confusing nightmare
-    shadowColoring = true;
+    shadowColoringEnabled = true;
 }
 
 /**
@@ -761,6 +761,17 @@ of the shadowed text if you're using it for subtraction.
 */
 int getTextRenderableCharsLengthWithShadows(string input) {
     return getTextRenderableCharsLength(input) * 2;
+}
+
+/**
+Allows you to disable shadow coloring for a teeny tiny bit of performance
+when you're doing cool custom shadow coloring!
+
+Important Note: When renderToCanvas() is called, shadow coloring is turned
+back on because it can become a confusing nightmare if not done like this.
+*/
+void disableShadowColoring() {
+    shadowColoringEnabled = false;
 }
 
 //! ============================ END GRAPHICS DISPATCH =============================
