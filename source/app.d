@@ -24,7 +24,7 @@ these more advanced features. I suggest you give it a glance. :D
 void main()
 {
     Window.initialize();
-    Window.setTitle("RazorFont Example Advanced");
+    Window.setTitle("RazorFont Example Intermediate");
 
     Shader.create("2d", "shaders/2d_vertex.vs", "shaders/2d_fragment.fs");
     Shader.createUniform("2d", "cameraMatrix");
