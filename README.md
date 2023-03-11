@@ -1,2 +1,2 @@
-# RazorFontExampleProjectAdvanced
- An advanced tutorial on how to user RazorFont.
+# RazorFontExampleProjectIntermediate
+ An intermediate tutorial on how to user RazorFont.
