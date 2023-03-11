@@ -713,7 +713,10 @@ void renderToCanvas(double posX, double posY, const double fontSize, string text
     }
 
     /**
-    Because there is no Z buffer in 2d, OpenGL seems to utilize 
+    Because there is no Z buffer in 2d, OpenGL seems to NOT overwrite pixel data of existing
+    framebuffer pixels. Since this is my testbed, I must assume that this is how
+    Vulkan, Metal, DX, and so-on do this. This is GUARANTEED to not affect software renderers.
+    So we have to do the shadowing AFTER the foreground.
 
     We need to poll, THEN disable the shadow variable because without that it would be
     an infinite recursion, aka a stack overflow.
