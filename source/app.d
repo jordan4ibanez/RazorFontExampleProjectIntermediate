@@ -355,12 +355,19 @@ void main()
         int fontSize = 50;
         string hello = "hi there";
 
-        const auto textSize = Font.getTextSize(fontSize, hello);
+        auto textSize = Font.getTextSize(fontSize, hello);
 
         double posX = Window.getWidth - textSize.width;
         double posY = Window.getHeight - textSize.height;
 
         Font.renderToCanvas(posX, posY, fontSize, hello);
+
+
+        string infoString = "Sizing auto calculates shadows";
+
+        textSize = Font.getTextSize(fontSize, infoString);
+
+        Font.renderToCanvas(0, Window.getHeight - textSize.height, fontSize, infoString);
         // Font.renderToCanvas(10,55, 50, "I am also saying hi");
 
         
