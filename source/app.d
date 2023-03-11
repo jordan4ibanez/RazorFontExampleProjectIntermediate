@@ -15,6 +15,12 @@ import doml.vector_2d;
 //! Only NEW pieces will be explained!
 //! https://github.com/jordan4ibanez/RazorFontExampleProject
 
+/**
+Also another note:
+There have been changes to shaders/2d_fragment.fs to allow RazorFont to use
+these more advanced features. I suggest you give it a glance. :D
+*/
+
 void main()
 {
     Window.initialize();
