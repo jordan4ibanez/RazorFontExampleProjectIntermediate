@@ -346,9 +346,14 @@ void main()
         //* Begin testing ============================================
 
         Font.enableShadows();
-        Font.switchColors(1,0,1);
+        Font.switchColors(1,0,0);
+
         Font.setShadowOffset(10,10);
+        Font.switchShadowColor(0,0,0);
+        Font.disableShadowColoring();
+
         Font.renderToCanvas(10,10, 50, "hi there");
+        Font.renderToCanvas(10,55, 50, "I am also saying hi");
 
         
 
